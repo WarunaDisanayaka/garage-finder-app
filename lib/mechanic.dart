@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'mechanic_profile.dart';
+
 class mechanic extends StatefulWidget {
   const mechanic({Key? key}) : super(key: key);
 
@@ -50,7 +52,8 @@ class _mechanicState extends State<mechanic> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          elevation: 0.0,
+            iconTheme: IconThemeData(color: Colors.white), // This changes the back arrow color
+      elevation: 0.0,
           actions: [
             IconButton(
               onPressed: () {
@@ -82,7 +85,7 @@ class _mechanicState extends State<mechanic> {
                 onTap: () {
                   // Handle navigation to the home screen
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => mechanic()));
+                      MaterialPageRoute(builder: (context) => MechanicProfileScreen()));
                 },
               ),
               ListTile(
