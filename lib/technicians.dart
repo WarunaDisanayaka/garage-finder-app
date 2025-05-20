@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class technicians extends StatefulWidget {
   final String dropdownValue;
@@ -169,27 +171,63 @@ class _techniciansState extends State<technicians> {
                                             2.0, // set the border weight to 2.0
                                         color: Colors.black,
                                       )),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         final FirebaseAuth auth = FirebaseAuth.instance;
                                         final User? user = auth.currentUser;
 
+                                        // 1. Request permission
+                                        LocationPermission permission = await Geolocator.requestPermission();
+                                        if (permission == LocationPermission.denied ||
+                                            permission == LocationPermission.deniedForever) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text('Location permission denied')),
+                                          );
+                                          return;
+                                        }
 
+                                        // 2. Get current position
+                                        Position position = await Geolocator.getCurrentPosition(
+                                          desiredAccuracy: LocationAccuracy.high,
+                                        );
+
+                                        // 3. Convert position to address
+                                        List<Placemark> placemarks = await placemarkFromCoordinates(
+                                          position.latitude,
+                                          position.longitude,
+                                        );
+
+                                        String address = '';
+                                        if (placemarks.isNotEmpty) {
+                                          final Placemark place = placemarks[0];
+                                          address =
+                                          '${place.name}, ${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
+                                        }
+
+                                        // 4. Prepare data
                                         final Map<String, dynamic> data = {
                                           'v_type': '${widget.dropdownValue}',
                                           'v_damage': '${widget.dropdownValue2}',
                                           'v_fuel': '${widget.dropdownValue3}',
                                           'userName': user?.uid,
                                           'Macid': macid,
+                                          'location': {
+                                            'latitude': position.latitude,
+                                            'longitude': position.longitude,
+                                          },
+                                          'address': address,
+                                          'timestamp': FieldValue.serverTimestamp(),
                                         };
 
-                                        FirebaseFirestore.instance.collection('order').add(data);
+                                        // 5. Save to Firestore
+                                        await FirebaseFirestore.instance.collection('order').add(data);
 
+                                        // 6. Show success dialog
                                         showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
                                               title: Text('Message'),
-                                              content: Text('Notify Successfully.'),
+                                              content: Text('Notify Successfully.\nAddress:\n$address'),
                                               actions: [
                                                 TextButton(
                                                   child: Text('OK'),
@@ -202,6 +240,7 @@ class _techniciansState extends State<technicians> {
                                           },
                                         );
                                       },
+
                                     ),
                                   ],
                                 ),

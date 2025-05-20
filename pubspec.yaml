@@ -45,10 +45,12 @@ dependencies:
   email_validator: ^2.1.17
   geocoding: ^2.0.1
   http: ^0.13.6
-  uuid: ^3.0.7
+  uuid: ^4.0.0
   google_places_flutter: ^2.0.5
   url_launcher: ^6.1.11
   firebase_app_check: ^0.3.2+5
+  geolocator: ^14.0.0
+
 
 
 
