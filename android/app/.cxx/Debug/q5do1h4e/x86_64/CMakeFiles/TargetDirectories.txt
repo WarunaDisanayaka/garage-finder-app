@@ -1,0 +1,2 @@
+/Users/warunapradeep/Downloads/Automobile-mobile-app-main/android/app/.cxx/Debug/q5do1h4e/x86_64/CMakeFiles/edit_cache.dir
+/Users/warunapradeep/Downloads/Automobile-mobile-app-main/android/app/.cxx/Debug/q5do1h4e/x86_64/CMakeFiles/rebuild_cache.dir

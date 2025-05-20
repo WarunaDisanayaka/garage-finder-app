@@ -81,105 +81,120 @@ class _mechanicState extends State<mechanic> {
               ),
               ListTile(
                 leading: Icon(Icons.home),
-                title: Text('My Account'),
+                title: Text('My Profile'),
                 onTap: () {
                   // Handle navigation to the home screen
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => MechanicProfileScreen()));
                 },
               ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {
-                  // Handle navigation to the settings screen
-                },
-              ),
+              // ListTile(
+              //   leading: Icon(Icons.settings),
+              //   title: Text('Settings'),
+              //   onTap: () {
+              //     // Handle navigation to the settings screen
+              //   },
+              // ),
             ],
           ),
         ),
         body: ordersList.isEmpty
             ?  Center(child: Text("No orders found."))
         : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Column(
-                    children: List.generate(ordersList.length, (index) {
-                      Map<dynamic, dynamic> order = ordersList[index];
-                      dynamic uid = order['userName'];
-                      String uidString = uid.toString();
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 8,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    "Request Details",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                _buildDetailRow("Vehicle Model", order["v_type"]),
-                                _buildDetailRow("Fuel Type", order["v_fuel"]),
-                                _buildDetailRow("Damage Type", order["v_damage"]),
-                                _buildDetailRow("Order Status", order["orderStatus"]),
-                                const SizedBox(height: 20),
-                                Center(
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton.icon(
-                                      onPressed: () async {
-                                        print(uidString);
-                                        getPhoneNumber(uid, context);
-                                      },
-                                      icon: Icon(Icons.call),
-                                      label: Text(
-                                        'Make A Call',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: EdgeInsets.symmetric(vertical: 12),
-                                        backgroundColor: Colors.green,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 100),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // align the heading to the start
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    "Your Order Requests",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-
                 ),
-              ));
+                const SizedBox(height: 16),
+                ...List.generate(ordersList.length, (index) {
+                  Map<dynamic, dynamic> order = ordersList[index];
+                  dynamic uid = order['userName'];
+                  String uidString = uid.toString();
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Text(
+                                "Request Details",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            _buildDetailRow("Vehicle Model", order["v_type"]),
+                            _buildDetailRow("Fuel Type", order["v_fuel"]),
+                            _buildDetailRow("Damage Type", order["v_damage"]),
+                            _buildDetailRow("Order Status", order["orderStatus"]),
+                            const SizedBox(height: 20),
+                            Center(
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    print(uidString);
+                                    getPhoneNumber(uid, context);
+                                  },
+                                  icon: Icon(Icons.call),
+                                  label: Text(
+                                    'Make A Call',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                    backgroundColor: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+
+        ));
   }
 
 // Define a function to retrieve the phone number based on UID
